@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                 final List<QueryDocumentSnapshot> usersGot = new ArrayList();
 
                 // 2- Query database for lookingForGender who's status is searching
-                db.collection("Users").whereEqualTo("gender",lookingForGender)
+                db.collection("Users").whereEqualTo("gender",lookingForGender).whereEqualTo("status",UserStatus.S)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
