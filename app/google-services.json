@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "714646111695",
+    "firebase_url": "https://magrooz-sufnatech.firebaseio.com",
+    "project_id": "magrooz-sufnatech",
+    "storage_bucket": "magrooz-sufnatech.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714646111695:android:8b55da15ab482106b6beba",
+        "android_client_info": {
+          "package_name": "com.sufnatech.magrooz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714646111695-1fkhvd2b9io5cjep1jsgtkof4n8c7fom.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sufnatech.magrooz",
+            "certificate_hash": "ac9ccab2c2b205ef563f860d62c912c4cf4894ff"
+          }
+        },
+        {
+          "client_id": "714646111695-s41cnu7tj898av3cvc7215dqkne974cd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMQkpWG89Y2wXHmDdfFr3pdKsLQoaLgpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714646111695-s41cnu7tj898av3cvc7215dqkne974cd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
