@@ -2,4 +2,5 @@
     <string name="app_name">Magrooz</string>
     <string name="admob_banner_id1">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_app_id">ca-app-pub-8832715849823322~3824348374</string>
+    <string name="letsgoBtn">Let\'s Go</string>
 </resources>
