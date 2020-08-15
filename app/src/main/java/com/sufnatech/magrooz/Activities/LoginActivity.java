@@ -15,6 +15,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.sufnatech.magrooz.R;
 
 import java.util.HashMap;
@@ -64,6 +68,10 @@ public class LoginActivity extends AppCompatActivity {
         letGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // TODO: This function is only for testing fireStore connection
+                // fireStoreTest();
+
                 Gender lookingForGender =
                         selectedGender == Gender.Male ? Gender.Female : Gender.Male;
                 Connecting(lookingForGender);
@@ -73,30 +81,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Connecting(Gender lookingForGender) {
-
-
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        // Create a new user with a first and last name
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("connectedToID", "null");
-//        user.put("gender", "M");
-//        user.put("status", "S");
-//
-//        // Add a new document with a generated ID
-//        db.collection("Users")
-//                .add(user)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d("HH: ", "DocumentSnapshot added with ID: " + documentReference.getId());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w("HH: ", "Error adding document", e);
-//                    }
-//                });
 
         // TODO: Create User in database
 
@@ -118,6 +102,31 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize all resources
         init();
 
+    }
+
+    private void fireStoreTest(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("connectedToID", "12345678");
+        user.put("gender", "M");
+        user.put("status", "S");
+
+        // Add a new document with a generated ID
+        db.collection("Users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("HH: ", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("HH: ", "Error adding document", e);
+                    }
+                });
     }
 
 }
