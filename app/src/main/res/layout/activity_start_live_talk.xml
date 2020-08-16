@@ -24,7 +24,7 @@
             android:textSize="18dp"
             android:textStyle="italic"
             android:padding="3dp"
-            android:id="@+id/StartLiveTalk"
+            android:id="@+id/StartLiveTalkB"
             />
 
     </LinearLayout>

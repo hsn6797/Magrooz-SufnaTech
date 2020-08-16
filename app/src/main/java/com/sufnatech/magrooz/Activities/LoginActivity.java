@@ -1,5 +1,9 @@
 package com.sufnatech.magrooz.Activities;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,30 +18,22 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogInterface;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogSingleInterface;
 import com.sufnatech.magrooz.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 enum Gender{
     M,
     F
-}
-enum UserStatus{
-    S,
-    C
 }
 
 
@@ -82,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Firebase Listeners
 
-
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
         letGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,95 +114,50 @@ public class LoginActivity extends AppCompatActivity {
 
                 Gender lookingForGender =
                         selectedGender == Gender.M ? Gender.F : Gender.M;
-                DoWork(lookingForGender);
+                doWork(lookingForGender);
             }
         });
 
     }
 
-    private void DoWork(final Gender lookingForGender) {
-
+    private void doWork(final Gender lookingForGender){
+        // Loading Start
+        final Dialog dialog = AlertDialog.showLoadingDialog(LoginActivity.this);
+        dialog.show();
         // 1- Create User in database
         Map<String, Object> user = new HashMap<>();
-        user.put("connectedToID", "null");
         user.put("gender", selectedGender);
-        user.put("status", UserStatus.S);
 
         db.collection("Users").add(user).
-                addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                // Loading finished
+                dialog.dismiss();
+
                 Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                String userID = documentReference.getId();
-                final List<QueryDocumentSnapshot> usersGot = new ArrayList();
-
-                // 2- Query database for lookingForGender who's status is searching
-                db.collection("Users").whereEqualTo("gender",lookingForGender).whereEqualTo("status",UserStatus.S)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                        usersGot.add(document);
-                                    }
-
-                                    // 3- Select random User from the usersGot list
-                                    Random random = new Random();
-                                    int index = random.nextInt(usersGot.size());
-
-                                    QueryDocumentSnapshot userPiked = usersGot.get(index);
-                                    Log.d(TAG, "Picked Random User => "+ userPiked.getId() + " => " + userPiked.getData());
-
-                                    // TODO: Check if its own and selected user status is not Reserved
-                                    // TODO: Then Connecting this User with selected User
-
-                                    // TODO: Go to video screen
-                                } else {
-                                    Log.w(TAG, "Error getting documents.", task.getException());
-                                }
-                            }
-                        });
+                final String userID = documentReference.getId();
 
 
-
-
-
+                // Go to StartLiveTalkActivity with current userID, gender and lookingForGender
+                Intent intent = new Intent(LoginActivity.this,StartLiveTalkActivity.class);
+                intent.putExtra("userID",userID);
+                intent.putExtra("gender",selectedGender);
+                intent.putExtra("lookingForGender",lookingForGender.toString());
+                startActivity(intent);
             }
             }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w(TAG, "Error adding document", e);
-
-                }
-            });
-
-
-
-    }
-
-    private void addUserInDB(Gender gender, UserStatus status, String connectedTo){
-        // Create a new user with a first and last name
-        Map<String, Object> user = new HashMap<>();
-        user.put("connectedToID", connectedTo);
-        user.put("gender", gender);
-        user.put("status", status);
-
-        // Add a new document with a generated ID
-        db.collection("Users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                String userID = documentReference.getId();
-
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
+                // Loading finished
+                dialog.dismiss();
 
+                // Display Some error message on screen.
+                AlertDialog.showSingleButtonAlertDialog(LoginActivity.this,"Ok","Error","Some error occur. Please try again later",new AlertDialogSingleInterface(){
+                    @Override
+                    public void doTaskOnClick() {
+                    }
+                });
             }
         });
     }
@@ -249,7 +198,23 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
-
-
 }
+
+
+// TODO- This code is for display two buttons Dialog box
+//AlertDialog ad = new AlertDialog();
+//
+//ad.showMultiButtonAlertDialog(context, "Delete", "Cancel", message+" "+mRecentlyDeletedItem.getA_siteName(), "This action will delete you file permanently", new AlertDialogInterface() {
+//
+//@Override
+//public void positiveButtonPressed() {
+//Toast.makeText(context,"Deleted",Toast.LENGTH_LONG).show();
+//DeleteRow(Integer.parseInt(mRecentlyDeletedItem.getA_Id()));
+//
+//}
+//
+//@Override
+//public void negativeButtonPressed() {
+//
+//}
+//});
