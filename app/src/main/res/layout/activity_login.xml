@@ -70,7 +70,7 @@
             android:layout_margin="20dp"
             android:scaleType="fitCenter"
             android:padding="5dp"
-            android:background="@drawable/custom_person_button"
+            android:background="@drawable/custom_person_onclick"
             android:src="@drawable/ic_person_male" />
 
         <androidx.appcompat.widget.AppCompatImageButton

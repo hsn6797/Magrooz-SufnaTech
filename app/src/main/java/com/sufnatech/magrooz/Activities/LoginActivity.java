@@ -87,12 +87,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedGender = Gender.M;
+                if (selectedGender == Gender.M){
+                    mButton.setBackgroundResource(R.drawable.custom_person_onclick);
+                    fButton.setBackgroundResource(R.drawable.custom_person_button);
+
+                }
             }
         });
         fButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedGender = Gender.F;
+
+                if (selectedGender == Gender.F){
+
+                    fButton.setBackgroundResource(R.drawable.custom_person_onclick);
+                    mButton.setBackgroundResource(R.drawable.custom_person_button);
+
+                }
 
             }
         });
