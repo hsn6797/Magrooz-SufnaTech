@@ -16,7 +16,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class VideoChatActivity extends AppCompatActivity  implements
         Session.SessionListener,
-        PublisherKit.PublisherListener {
+        PublisherKit.PublisherListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
