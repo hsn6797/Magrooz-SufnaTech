@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -50,13 +51,32 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
 
+//    // Go to StartLiveTalkActivity with sessionID
+//    Intent intent = new Intent(StartLiveTalkActivity.this,VideoChatActivity.class);
+//                intent.putExtra("sessionID",map.get("sessionID").toString());
+//                intent.putExtra("sessionToken",map.get("sessionToken").toString());
+//                intent.putExtra("currentSessionTableID",currentSessionTableID);
 
-    String SESSION_ID = "your session ID here ";
-    String TOKEN = "generated token here";
+
+    String SESSION_TABLE_ID = "";
+
+    String SESSION_ID = "";
+    String TOKEN = "";
 
 
 
     private void init(){
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            SESSION_TABLE_ID = extras.getString("currentSessionTableID");
+            SESSION_ID =  extras.getString("sessionID");
+            TOKEN = extras.getString("sessionToken");
+        }else{
+            finish();
+        }
+
+
         subsciberContainer = (FrameLayout)findViewById(R.id.subsciberContainer);
         publisherContainer =(FrameLayout)findViewById(R.id.publisherContainer);
         EndCallButton =(ImageButton) findViewById(R.id.EndCall);
