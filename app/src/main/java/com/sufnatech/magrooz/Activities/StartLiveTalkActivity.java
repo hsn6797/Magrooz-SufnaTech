@@ -12,6 +12,20 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.opentok.android.Session;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogSingleInterface;
 import com.sufnatech.magrooz.R;
@@ -34,6 +49,9 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
     private static final String TAG = "StartLiveTalkActivity: ";
 
+    public  static  String Log_tag = StartLiveTalkActivity.class.getSimpleName();
+
+
     String userID;
     Gender gender;
     String lookingForGender;
@@ -42,6 +60,10 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
     String currentSessionID;
+
+
+    String SESSION_ID = "";
+    String TOKEN = "";
 
 
 
@@ -58,7 +80,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
         startLiveTalk = (Button) findViewById(R.id.StartLiveTalkB);
 
-        startLiveTalk.setOnClickListener(new View.OnClickListener() {
+        startLiveTalk.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 doWork();
@@ -100,13 +122,16 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 //                                Log.d(TAG, document.getId() + " => " + document.getData());
 //                            }
                         } else{
-                            // TODO - Generate a unique sessionKey
-                            String sessionKey = "place your key here";
+
+                            // getting token ,Session,Apikey from server
+
+                            fetchSessionforConnection();
+
 
                             // 1- Create Session in database and move to next video screen
                             Map<String, Object> sessionCreateMap = new HashMap<>();
                             sessionCreateMap.put("publisherID", userID);
-                            sessionCreateMap.put("sessionKey", sessionKey);
+                            sessionCreateMap.put("sessionKey", SESSION_ID);
                             sessionCreateMap.put("subscriberID", "");
                             createSession(sessionCreateMap);
                         }
@@ -125,6 +150,34 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
         db = null;
     }
+
+
+    private void fetchSessionforConnection(){
+
+        RequestQueue reqQueue = Volley.newRequestQueue(this);
+        reqQueue.add(new JsonObjectRequest(Request.Method.GET,
+                "https://videoapptokbox.herokuapp.com" + "/session",
+                null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    SESSION_ID = response.getString("sessionId");
+                    TOKEN = response.getString("token");
+
+
+                } catch (JSONException error) {
+                    Log.e(Log_tag, "Web Service error: " + error.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error){
+            }
+        }));
+    }
+
 
 
     private void createSession(final Map<String,Object> map){
