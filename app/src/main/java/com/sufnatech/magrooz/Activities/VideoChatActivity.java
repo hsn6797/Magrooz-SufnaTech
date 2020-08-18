@@ -42,7 +42,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     private FrameLayout subsciberContainer;
     private FrameLayout publisherContainer;
-    private ImageButton btn;
+    private ImageButton EndCallButton;
 
 
     private static Publisher publisher;
@@ -56,6 +56,15 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
 
+    private void init(){
+        subsciberContainer = (FrameLayout)findViewById(R.id.subsciberContainer);
+        publisherContainer =(FrameLayout)findViewById(R.id.publisherContainer);
+        EndCallButton =(ImageButton) findViewById(R.id.EndCall);
+
+        request_permissions();
+    }
+
+
 
 
 
@@ -64,7 +73,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_chat);
 
-        request_permissions();
+        init();
+
+
     }
 
 

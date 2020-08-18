@@ -165,6 +165,9 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                     SESSION_ID = response.getString("sessionId");
                     TOKEN = response.getString("token");
 
+                    Log.i(Log_tag, "SESSION_ID: " + SESSION_ID);
+                    Log.i(Log_tag, "TOKEN: " + TOKEN);
+
 
                 } catch (JSONException error) {
                     Log.e(Log_tag, "Web Service error: " + error.getMessage());
