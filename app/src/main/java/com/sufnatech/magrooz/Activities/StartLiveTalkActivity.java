@@ -100,7 +100,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
                         // Searching for Available Session on the bases of empty subscriberID field
                         if (task.isSuccessful() && task.getResult().size() > 0) {
-                            Log.d(TAG, "Available Sessions\n");
+//                            Log.d(TAG, "Available Sessions\n");
 
                             // 1- Select Random Session
                             List<DocumentSnapshot> sessionsList = task.getResult().getDocuments();
