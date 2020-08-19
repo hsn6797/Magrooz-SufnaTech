@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -28,7 +29,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogSingleInterface;
@@ -70,7 +73,12 @@ public class StartLiveTalkActivity extends AppCompatActivity {
         }else{
            // finish();
         }
+
+
+
         db = FirebaseFirestore.getInstance();
+
+
 
         Log.i(Log_tag, "SESSION_TABLE: " + currentSessionTableID);
 
@@ -119,7 +127,8 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 //                            for (QueryDocumentSnapshot document : task.getResult()) {
 //                                Log.d(TAG, document.getId() + " => " + document.getData());
 //                            }
-                        } else{
+                        }
+                        else{
 
                             // getting token ,Session,Apikey from server
                             fetchSessionforConnection();
@@ -138,6 +147,12 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
     }
 
@@ -227,8 +242,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                         intent.putExtra("UserType","P");
 
 
-
-                        startActivity(intent);
+                       startActivity(intent);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {

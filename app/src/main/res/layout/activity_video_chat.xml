@@ -10,7 +10,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent">
+        android:background="@color/Mainfragment">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -44,6 +44,29 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
         android:id="@+id/EndCall"
+
+        />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/mute"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="70dp"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/micMute"
+
+        />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/swtichcamera"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="70dp"
+        android:id="@+id/Swapcamera"
 
         />
 

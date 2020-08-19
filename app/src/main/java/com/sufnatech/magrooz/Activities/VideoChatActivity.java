@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
+import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,9 +24,11 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.opentok.android.BaseVideoRenderer;
+import com.opentok.android.Connection;
 import com.opentok.android.Publisher;
 import com.opentok.android.Subscriber;
 import com.opentok.android.SubscriberKit;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
 import com.sufnatech.magrooz.R;
 
 import com.opentok.android.OpentokError;
@@ -32,6 +36,7 @@ import com.opentok.android.PublisherKit;
 import com.opentok.android.Session;
 import com.opentok.android.Stream;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,10 +48,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
         PublisherKit.PublisherListener,Subscriber.SubscriberListener{
 
 
-    public  static  String Log_tag = VideoChatActivity.class.getSimpleName();
+    public static  String Log_tag = VideoChatActivity.class.getSimpleName();
 
-    public  static String API_KEY = "46890114";
-
+    public static String API_KEY = "46890114";
 
     public static final int RC_setting = 124;
 
@@ -54,25 +58,18 @@ public class VideoChatActivity extends AppCompatActivity  implements
     FirebaseFirestore db;
 
 
-
-
     private FrameLayout subsciberContainer;
     private FrameLayout publisherContainer;
     private ImageButton EndCallButton;
+    private ImageButton swapcamera;
+    private ImageButton muteMIC;
+
+
 
 
     private static Publisher publisher;
     private Subscriber subscriber;
     private Session mSession;
-
-
-
-//    // Go to StartLiveTalkActivity with sessionID
-//    Intent intent = new Intent(StartLiveTalkActivity.this,VideoChatActivity.class);
-//                intent.putExtra("sessionID",map.get("sessionID").toString());
-//                intent.putExtra("sessionToken",map.get("sessionToken").toString());
-//                intent.putExtra("currentSessionTableID",currentSessionTableID);
-
 
     String SESSION_TABLE_ID = "";
     String SESSION_ID = "";
@@ -81,6 +78,8 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     String currentUserID = "";
     String UserType = "";
+    boolean mic_mute = false;
+
 
     private void init(){
 
@@ -101,23 +100,18 @@ public class VideoChatActivity extends AppCompatActivity  implements
         //getDB instanse here
         db = FirebaseFirestore.getInstance();
 
-        // deleteSessionfromDB();
 
         Log.i(Log_tag, "TABLEID: " + SESSION_TABLE_ID);
         Log.i(Log_tag, "TABLEUSER: " + UserType);
 
 
 
-
-
-
-
-
-
-
         subsciberContainer = (FrameLayout)findViewById(R.id.subsciberContainer);
         publisherContainer =(FrameLayout)findViewById(R.id.publisherContainer);
         EndCallButton =(ImageButton) findViewById(R.id.EndCall);
+        swapcamera =(ImageButton)findViewById(R.id.Swapcamera);
+        muteMIC =(ImageButton)findViewById(R.id.micMute);
+
 
 
         EndCallButton.setOnClickListener(new View.OnClickListener(){
@@ -129,6 +123,31 @@ public class VideoChatActivity extends AppCompatActivity  implements
             }
         });
 
+        swapcamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    publisher.swapCamera();
+
+            }
+        });
+        muteMIC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mic_mute == false){
+                    mic_mute = true;
+                    publisher.setPublishAudio(false);
+                    muteMIC.setBackgroundResource(R.drawable.unmute);
+                }
+                else{
+                    mic_mute = false;
+                    publisher.setPublishAudio(true);
+                    muteMIC.setBackgroundResource(R.drawable.mute);
+                }
+            }
+        });
+
+
 
         request_permissions();
     }
@@ -139,7 +158,6 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
             if (publisher != null && subscriber != null){
 
-                    deleteSessionfromDB();
                     mSession.unpublish(publisher);
                     mSession.unsubscribe(subscriber);
 
@@ -151,7 +169,6 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
                 if (UserType.equals("P")){
 
-                    deleteSessionfromDB();
                     mSession.unpublish(publisher);
 
                 }
@@ -159,15 +176,12 @@ public class VideoChatActivity extends AppCompatActivity  implements
             }
             else if (subscriber != null){
                 if (UserType.equals("S")) {
-                    deleteSessionfromDB();
                     mSession.unpublish(publisher);
                     mSession.unsubscribe(subscriber);
 
                 }
             }
-//
-//        mSession.unpublish(publisher);
-//        mSession.unsubscribe(subscriber);
+
 
     }
 
@@ -216,13 +230,13 @@ public class VideoChatActivity extends AppCompatActivity  implements
     @Override
     public void onStreamCreated(PublisherKit publisherKit, Stream stream) {
 
+
     }
 
     @Override
     public void onStreamDestroyed(PublisherKit publisherKit, Stream stream) {
 
-           // deleteSessionfromDB();
-            publisher = null;
+        publisher = null;
             finish();
 
     }
@@ -232,25 +246,33 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     }
 
+
+
     @Override
     public void onConnected(Session session) {
 
-        publisher = new Publisher.Builder(this).name("publisher").build();
-        publisher.setPublisherListener(this);
-
-        publisher.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
-        publisherContainer.addView(publisher.getView(),0);
+        final Dialog dialog = AlertDialog.showLoadingDialog(VideoChatActivity.this);
 
 
-        if(publisher.getView() instanceof GLSurfaceView)
-        {
-            ((GLSurfaceView) publisher.getView()).setZOrderOnTop(true);
 
+            publisher = new Publisher.Builder(this).name("publisher").build();
+            publisher.setPublisherListener(this);
+
+            publisher.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
+            publisherContainer.addView(publisher.getView(),0);
+
+
+            if(publisher.getView() instanceof GLSurfaceView)
+            {
+                ((GLSurfaceView) publisher.getView()).setZOrderOnTop(true);
+
+            }
+
+            session.publish(publisher);
         }
 
-        session.publish(publisher);
 
-    }
+
 
     @Override
     public void onDisconnected(Session session) {
@@ -258,10 +280,13 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     }
 
+
     @Override
     public void onStreamReceived(Session session, Stream stream) {
 
+
         if(subscriber == null){
+
             subscriber = new Subscriber.Builder(this,stream).build();
             session.subscribe(subscriber);
             subscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
@@ -275,12 +300,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
     public void onStreamDropped(Session session, Stream stream) {
 
         if (subscriber != null){
+
             subscriber = null;
             subsciberContainer.removeAllViews();
-
-               // deleteSessionfromDB();
-
-
 
             finish();
         }
@@ -321,14 +343,20 @@ public class VideoChatActivity extends AppCompatActivity  implements
                 });
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-//        mSession.unpublish(publisher);
-//        mSession.unsubscribe(subscriber);
-//
-//
-//    }
-//    ons
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        deleteSessionfromDB();
+
+
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        endCallFunction();
+    }
 }
