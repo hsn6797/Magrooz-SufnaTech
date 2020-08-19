@@ -45,10 +45,10 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     public  static  String Log_tag = VideoChatActivity.class.getSimpleName();
 
-    public  static String API_KEY = "46886134";
+    public  static String API_KEY = "46890114";
 
 
-    public static final int RC_setting = 545;
+    public static final int RC_setting = 124;
 
 
     FirebaseFirestore db;
@@ -137,38 +137,37 @@ public class VideoChatActivity extends AppCompatActivity  implements
     private void endCallFunction(){
 
 
-//            if (publisher != null && subscriber != null){
-//                if (UserType.equals("P")){
-//
-//                    deleteSessionfromDB();
-//                    mSession.unpublish(publisher);
-//                    mSession.unsubscribe(subscriber);
-//
-//                }
-//
-//
-//            }
-//            else if (publisher != null){
-//
-//                if (UserType.equals("P")){
-//
-//                    deleteSessionfromDB();
-//                    mSession.unpublish(publisher);
-//
-//                }
-//
-//            }
-//            else if (subscriber != null){
-//                if (UserType.equals("S")) {
-//                    deleteSessionfromDB();
-//                    mSession.unpublish(publisher);
-//                    mSession.unpublish(publisher);
-//
-//                }
-//            }
+            if (publisher != null && subscriber != null){
 
-        mSession.unpublish(publisher);
-        mSession.unsubscribe(subscriber);
+                    deleteSessionfromDB();
+                    mSession.unpublish(publisher);
+                    mSession.unsubscribe(subscriber);
+
+
+
+
+            }
+            else if (publisher != null){
+
+                if (UserType.equals("P")){
+
+                    deleteSessionfromDB();
+                    mSession.unpublish(publisher);
+
+                }
+
+            }
+            else if (subscriber != null){
+                if (UserType.equals("S")) {
+                    deleteSessionfromDB();
+                    mSession.unpublish(publisher);
+                    mSession.unsubscribe(subscriber);
+
+                }
+            }
+//
+//        mSession.unpublish(publisher);
+//        mSession.unsubscribe(subscriber);
 
     }
 
@@ -222,11 +221,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
     @Override
     public void onStreamDestroyed(PublisherKit publisherKit, Stream stream) {
 
-            deleteSessionfromDB();
-
-
-        publisher = null;
-        finish();
+           // deleteSessionfromDB();
+            publisher = null;
+            finish();
 
     }
 
@@ -281,7 +278,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
             subscriber = null;
             subsciberContainer.removeAllViews();
 
-                deleteSessionfromDB();
+               // deleteSessionfromDB();
 
 
 
