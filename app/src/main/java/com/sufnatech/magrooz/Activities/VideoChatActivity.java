@@ -134,16 +134,32 @@ public class VideoChatActivity extends AppCompatActivity  implements
         muteMIC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mic_mute == false){
-                    mic_mute = true;
-                    publisher.setPublishAudio(false);
-                    muteMIC.setBackgroundResource(R.drawable.unmute);
+                if (UserType.equals("P")){
+                    if(mic_mute == false){
+                        mic_mute = true;
+                        publisher.setPublishAudio(false);
+                        muteMIC.setBackgroundResource(R.drawable.unmute);
+                    }
+                    else{
+                        mic_mute = false;
+                        publisher.setPublishAudio(true);
+                        muteMIC.setBackgroundResource(R.drawable.mute);
+                    }
                 }
-                else{
-                    mic_mute = false;
-                    publisher.setPublishAudio(true);
-                    muteMIC.setBackgroundResource(R.drawable.mute);
+                else if (UserType.equals("S")){
+
+                    if(mic_mute == false){
+                        mic_mute = true;
+                        subscriber.setSubscribeToAudio(false);
+                        muteMIC.setBackgroundResource(R.drawable.unmute);
+                    }
+                    else{
+                        mic_mute = false;
+                        subscriber.setSubscribeToAudio(true);
+                        muteMIC.setBackgroundResource(R.drawable.mute);
+                    }
                 }
+
             }
         });
 
