@@ -128,14 +128,14 @@ public class LoginActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("Gender", selectedGender);
 
-        db.collection("Users").add(user).
+        db.collection("UsersMag").add(user).
             addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 // Loading finished
                 dialog.dismiss();
 
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                Log.d(TAG, "DocumentSnapshot added with ID:" + documentReference.getId());
                 final String userID = documentReference.getId();
 
 
@@ -144,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("userID",userID);
                 intent.putExtra("gender",selectedGender);
                 intent.putExtra("lookingForGender",lookingForGender.toString());
+                intent.putExtra("isRedirect",true);
                 startActivity(intent);
             }
             }).addOnFailureListener(new OnFailureListener() {

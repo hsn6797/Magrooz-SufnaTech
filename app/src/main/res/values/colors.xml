@@ -7,4 +7,5 @@
     <color name="TextColor">#262626</color>
     <color name="Mainfragment">#1E1923</color>
     <color name="SecondaryFragment">#121212</color>
+    <color name="whitealert">#FFFF</color>
 </resources>

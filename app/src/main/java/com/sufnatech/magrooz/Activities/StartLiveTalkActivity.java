@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,12 +49,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import com.google.android.gms.ads.InterstitialAd;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+
 
 public class StartLiveTalkActivity extends AppCompatActivity {
 
     private static final String TAG = "StartLiveTalkActivity: ";
 
     public  static  String Log_tag = StartLiveTalkActivity.class.getSimpleName();
+
+    private InterstitialAd mInterstitialAd;
+    private AdView mAdView;
+
+
+
+
+
 
 
     String userID;
@@ -61,17 +80,32 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     String SESSION_ID = "";
     String TOKEN = "";
 
+    boolean isRedirectLogin ;
+
+
+
+    String interstitalad = "ca-app-pub-3940256099942544/1033173712";
 
 
     private void init(){
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userID = extras.getString("userID");
             gender = (Gender) extras.get("gender");
             lookingForGender = extras.getString("lookingForGender");
+
+            isRedirectLogin = extras.getBoolean("isRedirect");
         }else{
            // finish();
         }
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {}
+        });
+
 
 
 
@@ -87,15 +121,74 @@ public class StartLiveTalkActivity extends AppCompatActivity {
         startLiveTalk.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
                 doWork();
             }
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (isRedirectLogin){
+            //Do nothing
+            LoadBanner();
+        }
+        else{
+            LoadAdswhenLoadingScreen();
+            LoadBanner();
+
+        }
+
+
+    }
+
+    private void LoadBanner(){
+
+        mAdView = findViewById(R.id.adView2);
+      //  AdSize adSize = new AdSize(300, 50);
+       // mAdView.setAdSize(adSize);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
+    }
+
+    private void LoadAdswhenLoadingScreen(){
+
+
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(interstitalad);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                mInterstitialAd.show();
+
+            }
+        });
+
+    }
+
+
     private void doWork(){
 
+
         // Searching for a free Sessions
-        db.collection("Sessions").whereEqualTo("subscriberID","")
+        db.collection("SessionMag").whereEqualTo("subscriberID","")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -113,78 +206,100 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
                             for (DocumentSnapshot doc:
                                  sessionsList) {
-                                if(doc.get("lookingForGender").equals(gender)){
+                               // if(doc.get("lookingForGender") == gender)
+                               String c =  doc.get("lookingForGender").toString();
+                                Log.i(Log_tag, "Genders: " + c);
+
+                                if(c.equals(gender.toString())){
+                                    Log.i(Log_tag, "docfound:"+ gender);
+
                                     document = doc;
+
                                     break;
+                                }
+                                else{
+
+
+                                    break;
+
                                 }
                             }
                             if(document == null){
 
-                                db.collection("Sessions")
-                                        .whereEqualTo("subscriberID","")
-                                        .whereEqualTo("lookingForGender",lookingForGender)
-                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                        if (task2.isSuccessful() && task2.getResult().size() > 0) {
-                                            // 1- Select Random Session
-                                            int index = new Random().nextInt(task2.getResult().getDocuments().size());
+                                new LovelyStandardDialog(StartLiveTalkActivity.this, LovelyStandardDialog.ButtonLayout.VERTICAL)
+                                        .setTopColorRes(R.color.BackgroundApp)
+                                        .setButtonsColorRes(R.color.whitealert)
+                                        .setIcon(R.drawable.alert)
+                                        .setTitle("Opsss!")
+                                        .setMessage("No opposite gender found! Would you like chat with same sex?")
+                                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 
-                                            DocumentSnapshot document2 = task2.getResult().getDocuments().get(index);
 
-                                            // 2- Update the session and insert the userID in subscriberID field
-                                            // and move to next video screen
-                                            Map<String, Object> sessionMap = new HashMap<>();
-                                            sessionMap.put("publisherID", document2.get("publisherID"));
-                                            sessionMap.put("sessionID", document2.get("sessionID"));
-                                            sessionMap.put("sessionToken", document2.get("sessionToken"));
-                                            sessionMap.put("subscriberID", userID);
-                                            sessionMap.put("lookingForGender", document2.get("lookingForGender"));
+                                                db.collection("SessionMag")
+                                                        .whereEqualTo("subscriberID","")
+                                                        .whereEqualTo("lookingForGender",lookingForGender)//Lookingforgender
+                                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task2) {
+                                                   if (task2.isSuccessful() && task2.getResult().size() > 0) {
+        // 1- Select Random Session
+                                                         int index = new Random().nextInt(task2.getResult().getDocuments().size());
 
-                                            updateSessionSubsciberID(sessionMap,document2.getId());
+                                                         DocumentSnapshot document2 = task2.getResult().getDocuments().get(index);
 
-                                        }else{
+        // 2- Update the session and insert the userID in subscriberID field
+        // and move to next video screen
+                                                       Map<String, Object> sessionMap = new HashMap<>();
+                                                        sessionMap.put("publisherID", document2.get("publisherID"));
+                                                        sessionMap.put("sessionID", document2.get("sessionID"));
+                                                        sessionMap.put("sessionToken", document2.get("sessionToken"));
+                                                        sessionMap.put("subscriberID", userID);
+                                                        sessionMap.put("lookingForGender", document2.get("lookingForGender"));
 
-                                        }
-                                    }
-                                });
+                                                        updateSessionSubsciberID(sessionMap,document2.getId());
+
+                                                   }
+                                                   else{
+
+                                                   }
+                                                    }
+                                                 });
+
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, null)
+                                        .show();
 
                             }
+                            else {
 //                            DocumentSnapshot document = sessionsList.get(index);
 //                            int index = new Random().nextInt(sessionsList.size());
 
-                            Log.d(TAG, document.getId() + " => " + document.getData());
+                                Log.d(TAG, document.getId() + " => " + document.getData());
 
-                            // 2- Update the session and insert the userID in subscriberID field
-                            // and move to next video screen
-                            Map<String, Object> sessionMap = new HashMap<>();
-                            sessionMap.put("publisherID", document.get("publisherID"));
-                            sessionMap.put("sessionID", document.get("sessionID"));
-                            sessionMap.put("sessionToken", document.get("sessionToken"));
-                            sessionMap.put("subscriberID", userID);
-                            sessionMap.put("lookingForGender", document.get("lookingForGender"));
+                                // 2- Update the session and insert the userID in subscriberID field
+                                // and move to next video screen
+                                Map<String, Object> sessionMap = new HashMap<>();
+                                sessionMap.put("publisherID", document.get("publisherID"));
+                                sessionMap.put("sessionID", document.get("sessionID"));
+                                sessionMap.put("sessionToken", document.get("sessionToken"));
+                                sessionMap.put("subscriberID", userID);
+                                sessionMap.put("lookingForGender", document.get("lookingForGender"));
 
-                            updateSessionSubsciberID(sessionMap,document.getId());
+                                updateSessionSubsciberID(sessionMap, document.getId());
 
 //                            for (QueryDocumentSnapshot document : task.getResult()) {
 //                                Log.d(TAG, document.getId() + " => " + document.getData());
 //                            }
+                            }
                         }
                         else{
 
-                            // getting token ,Session,Apikey from server
+                            // getting token ,Session, from server
                             fetchSessionforConnection();
-//                            if(!SESSION_ID.equals("") && !TOKEN.equals("")){
-                            // 1- Create Session in database and move to next video screen
 
-//                            }else{
-//                                AlertDialog.showSingleButtonAlertDialog(StartLiveTalkActivity.this,"Ok","Error",
-//                                        "Please try again later",new AlertDialogSingleInterface(){
-//                                    @Override
-//                                    public void doTaskOnClick() {
-//                                    }
-//                                });
-//                            }
 
                         }
                     }
@@ -267,7 +382,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 //        // Loading Start
 //        final Dialog dialog = AlertDialog.showLoadingDialog(StartLiveTalkActivity.this);
 //        dialog.show();
-        db.collection("Sessions").add(map).
+        db.collection("SessionMag").add(map).
                 addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -288,7 +403,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                         intent.putExtra("CurrentUserID",userID);
                         intent.putExtra("UserType","P");
 
-
+                        isRedirectLogin = false;
                        startActivity(intent);
 
                     }
@@ -315,7 +430,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
         final Dialog dialog = AlertDialog.showLoadingDialog(StartLiveTalkActivity.this);
         dialog.show();
 
-        db.collection("Sessions")
+        db.collection("SessionMag")
                 .document(sessionID)
                 .update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -335,6 +450,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
 
 
+                isRedirectLogin = false;
 
                 startActivity(intent);
             }
@@ -348,7 +464,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
     }
     private void deleteUser(){
-        db.collection("Users")
+        db.collection("UsersMag")
                 .document(userID)
                 .delete().addOnFailureListener(new OnFailureListener() {
             @Override
@@ -358,7 +474,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
         });
     }
     private void deleteSession(){
-        db.collection("Sessions")
+        db.collection("SessionMag")
                 .document(currentSessionTableID)
                 .delete().addOnFailureListener(new OnFailureListener() {
             @Override
@@ -374,3 +490,4 @@ public class StartLiveTalkActivity extends AppCompatActivity {
         init();
     }
 }
+//

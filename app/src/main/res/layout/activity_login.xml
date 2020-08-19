@@ -32,6 +32,8 @@
 
     </LinearLayout>
 
+
+
     <LinearLayout
         android:id="@+id/mid_linear"
         android:layout_width="match_parent"

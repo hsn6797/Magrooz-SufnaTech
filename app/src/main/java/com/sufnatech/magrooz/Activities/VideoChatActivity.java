@@ -164,19 +164,18 @@ public class VideoChatActivity extends AppCompatActivity  implements
             }
             else if (publisher != null){
 
-                if (UserType.equals("P")){
 
                     mSession.unpublish(publisher);
 
-                }
+
 
             }
             else if (subscriber != null){
-                if (UserType.equals("S")) {
+
                     mSession.unpublish(publisher);
                     mSession.unsubscribe(subscriber);
 
-                }
+
             }
 
 
@@ -330,7 +329,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
     //Delete Current session from Firebase
     private void deleteSessionfromDB(){
 
-        db.collection("Sessions")
+        db.collection("SessionMag")
                 .document(SESSION_TABLE_ID)
                 .delete().addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -345,9 +344,6 @@ public class VideoChatActivity extends AppCompatActivity  implements
         super.onDestroy();
 
         deleteSessionfromDB();
-
-
-
 
     }
 

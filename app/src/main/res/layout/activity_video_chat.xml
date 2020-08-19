@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     tools:context=".Activities.VideoChatActivity">
 
 
@@ -48,8 +49,8 @@
         />
 
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/mute"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="70dp"
@@ -59,8 +60,8 @@
         />
 
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/swtichcamera"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
