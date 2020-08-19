@@ -56,9 +56,8 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     Button startLiveTalk;
     FirebaseFirestore db;
 
+
     String currentSessionTableID="";
-
-
     String SESSION_ID = "";
     String TOKEN = "";
 
@@ -107,10 +106,52 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                         if (task.isSuccessful() && task.getResult().size() > 0) {
                             Log.d(TAG, "Available Sessions\n");
 
+
                             // 1- Select Random Session
                             List<DocumentSnapshot> sessionsList = task.getResult().getDocuments();
-                            int index = new Random().nextInt(sessionsList.size());
-                            DocumentSnapshot document = sessionsList.get(index);
+                            DocumentSnapshot document = null;
+
+                            for (DocumentSnapshot doc:
+                                 sessionsList) {
+                                if(doc.get("lookingForGender").equals(gender)){
+                                    document = doc;
+                                    break;
+                                }
+                            }
+                            if(document == null){
+
+                                db.collection("Sessions")
+                                        .whereEqualTo("subscriberID","")
+                                        .whereEqualTo("lookingForGender",lookingForGender)
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task2) {
+                                        if (task2.isSuccessful() && task2.getResult().size() > 0) {
+                                            // 1- Select Random Session
+                                            int index = new Random().nextInt(task2.getResult().getDocuments().size());
+
+                                            DocumentSnapshot document2 = task2.getResult().getDocuments().get(index);
+
+                                            // 2- Update the session and insert the userID in subscriberID field
+                                            // and move to next video screen
+                                            Map<String, Object> sessionMap = new HashMap<>();
+                                            sessionMap.put("publisherID", document2.get("publisherID"));
+                                            sessionMap.put("sessionID", document2.get("sessionID"));
+                                            sessionMap.put("sessionToken", document2.get("sessionToken"));
+                                            sessionMap.put("subscriberID", userID);
+                                            sessionMap.put("lookingForGender", document2.get("lookingForGender"));
+
+                                            updateSessionSubsciberID(sessionMap,document2.getId());
+
+                                        }else{
+
+                                        }
+                                    }
+                                });
+
+                            }
+//                            DocumentSnapshot document = sessionsList.get(index);
+//                            int index = new Random().nextInt(sessionsList.size());
 
                             Log.d(TAG, document.getId() + " => " + document.getData());
 
@@ -121,6 +162,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                             sessionMap.put("sessionID", document.get("sessionID"));
                             sessionMap.put("sessionToken", document.get("sessionToken"));
                             sessionMap.put("subscriberID", userID);
+                            sessionMap.put("lookingForGender", document.get("lookingForGender"));
 
                             updateSessionSubsciberID(sessionMap,document.getId());
 
@@ -197,6 +239,8 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                     sessionCreateMap.put("sessionID", SESSION_ID);
                     sessionCreateMap.put("sessionToken", TOKEN);
                     sessionCreateMap.put("subscriberID", "");
+                    sessionCreateMap.put("lookingForGender", lookingForGender);
+
                     createSession(sessionCreateMap);
 
                     // Loading finished
@@ -233,6 +277,9 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                         final String sessionID = documentReference.getId();
                         currentSessionTableID = sessionID;
+
+
+
                         // Go to StartLiveTalkActivity with sessionID
                         Intent intent = new Intent(StartLiveTalkActivity.this,VideoChatActivity.class);
                         intent.putExtra("sessionID",map.get("sessionID").toString());
