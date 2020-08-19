@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog.show();
         // 1- Create User in database
         Map<String, Object> user = new HashMap<>();
-        user.put("gender", selectedGender);
+        user.put("Gender", selectedGender);
 
         db.collection("Users").add(user).
             addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

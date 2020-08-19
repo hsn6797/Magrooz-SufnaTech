@@ -8,12 +8,23 @@ import android.Manifest;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.opentok.android.BaseVideoRenderer;
 import com.opentok.android.Publisher;
 import com.opentok.android.Subscriber;
+import com.opentok.android.SubscriberKit;
 import com.sufnatech.magrooz.R;
 
 import com.opentok.android.OpentokError;
@@ -21,12 +32,15 @@ import com.opentok.android.PublisherKit;
 import com.opentok.android.Session;
 import com.opentok.android.Stream;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class VideoChatActivity extends AppCompatActivity  implements
         Session.SessionListener,
-        PublisherKit.PublisherListener{
+        PublisherKit.PublisherListener,Subscriber.SubscriberListener{
 
 
     public  static  String Log_tag = VideoChatActivity.class.getSimpleName();
@@ -37,8 +51,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
     public static final int RC_setting = 545;
 
 
+    FirebaseFirestore db;
 
-    private com.opentok.android.Session mSession;
+
 
 
     private FrameLayout subsciberContainer;
@@ -48,6 +63,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     private static Publisher publisher;
     private Subscriber subscriber;
+    private Session mSession;
 
 
 
@@ -59,11 +75,12 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
     String SESSION_TABLE_ID = "";
-
     String SESSION_ID = "";
     String TOKEN = "";
 
 
+    String currentUserID = "";
+    String UserType = "";
 
     private void init(){
 
@@ -72,19 +89,88 @@ public class VideoChatActivity extends AppCompatActivity  implements
             SESSION_TABLE_ID = extras.getString("currentSessionTableID");
             SESSION_ID =  extras.getString("sessionID");
             TOKEN = extras.getString("sessionToken");
+            currentUserID = extras.getString("CurrentUserID");
+            UserType = extras.getString("UserType");
+
+
         }else{
             finish();
         }
+
+
+        //getDB instanse here
+        db = FirebaseFirestore.getInstance();
+
+        // deleteSessionfromDB();
+
+        Log.i(Log_tag, "TABLEID: " + SESSION_TABLE_ID);
+        Log.i(Log_tag, "TABLEUSER: " + UserType);
+
+
+
+
+
+
+
+
 
 
         subsciberContainer = (FrameLayout)findViewById(R.id.subsciberContainer);
         publisherContainer =(FrameLayout)findViewById(R.id.publisherContainer);
         EndCallButton =(ImageButton) findViewById(R.id.EndCall);
 
+
+        EndCallButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+               endCallFunction();
+
+            }
+        });
+
+
         request_permissions();
     }
 
 
+    private void endCallFunction(){
+
+
+//            if (publisher != null && subscriber != null){
+//                if (UserType.equals("P")){
+//
+//                    deleteSessionfromDB();
+//                    mSession.unpublish(publisher);
+//                    mSession.unsubscribe(subscriber);
+//
+//                }
+//
+//
+//            }
+//            else if (publisher != null){
+//
+//                if (UserType.equals("P")){
+//
+//                    deleteSessionfromDB();
+//                    mSession.unpublish(publisher);
+//
+//                }
+//
+//            }
+//            else if (subscriber != null){
+//                if (UserType.equals("S")) {
+//                    deleteSessionfromDB();
+//                    mSession.unpublish(publisher);
+//                    mSession.unpublish(publisher);
+//
+//                }
+//            }
+
+        mSession.unpublish(publisher);
+        mSession.unsubscribe(subscriber);
+
+    }
 
 
 
@@ -136,6 +222,12 @@ public class VideoChatActivity extends AppCompatActivity  implements
     @Override
     public void onStreamDestroyed(PublisherKit publisherKit, Stream stream) {
 
+            deleteSessionfromDB();
+
+
+        publisher = null;
+        finish();
+
     }
 
     @Override
@@ -166,6 +258,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
     @Override
     public void onDisconnected(Session session) {
 
+
     }
 
     @Override
@@ -187,6 +280,12 @@ public class VideoChatActivity extends AppCompatActivity  implements
         if (subscriber != null){
             subscriber = null;
             subsciberContainer.removeAllViews();
+
+                deleteSessionfromDB();
+
+
+
+            finish();
         }
 
     }
@@ -195,4 +294,44 @@ public class VideoChatActivity extends AppCompatActivity  implements
     public void onError(Session session, OpentokError opentokError) {
 
     }
+
+    @Override
+    public void onConnected(SubscriberKit subscriberKit) {
+
+    }
+
+    @Override
+    public void onDisconnected(SubscriberKit subscriberKit) {
+
+
+    }
+
+    @Override
+    public void onError(SubscriberKit subscriberKit, OpentokError opentokError) {
+
+    }
+
+    //Delete Current session from Firebase
+    private void deleteSessionfromDB(){
+
+        db.collection("Sessions")
+                .document(SESSION_TABLE_ID)
+                .delete().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // TODO - If session not deleted successfully handle it here
+                    }
+                });
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        mSession.unpublish(publisher);
+//        mSession.unsubscribe(subscriber);
+//
+//
+//    }
+//    ons
 }

@@ -68,9 +68,12 @@ public class StartLiveTalkActivity extends AppCompatActivity {
             gender = (Gender) extras.get("gender");
             lookingForGender = extras.getString("lookingForGender");
         }else{
-            finish();
+           // finish();
         }
         db = FirebaseFirestore.getInstance();
+
+        Log.i(Log_tag, "SESSION_TABLE: " + currentSessionTableID);
+
 
         startLiveTalk = (Button) findViewById(R.id.StartLiveTalkB);
 
@@ -139,15 +142,22 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Delete the created user from database where id = userID
-        deleteUser();
-//         Delete the created user from database where id = currentSessionID
-        deleteSession();
+    public void onBackPressed() {
+        super.onBackPressed();
+                // Delete the created user from database where id = userID
+        if(userID != ""){
+            deleteUser();
 
-        db = null;
+        }
+        // Delete the created user from database where id = currentSessionID
+
+
+        if (currentSessionTableID != ""){
+             deleteSession();
+        }
+        finish();
     }
+
 
 
     private void fetchSessionforConnection(){
@@ -213,6 +223,10 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                         intent.putExtra("sessionID",map.get("sessionID").toString());
                         intent.putExtra("sessionToken",map.get("sessionToken").toString());
                         intent.putExtra("currentSessionTableID",currentSessionTableID);
+                        intent.putExtra("CurrentUserID",userID);
+                        intent.putExtra("UserType","P");
+
+
 
                         startActivity(intent);
 
@@ -255,6 +269,10 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                 intent.putExtra("sessionID",map.get("sessionID").toString());
                 intent.putExtra("sessionToken",map.get("sessionToken").toString());
                 intent.putExtra("currentSessionTableID",currentSessionTableID);
+                intent.putExtra("CurrentUserID",userID);
+                intent.putExtra("UserType","S");
+
+
 
 
                 startActivity(intent);
