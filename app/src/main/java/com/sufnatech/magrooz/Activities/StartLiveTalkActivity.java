@@ -62,7 +62,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     private AdView mAdView;
 
-
+    private static String interstitalad = "ca-app-pub-1410667554869432/1247637562";
 
 
 
@@ -84,7 +84,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
 
 
-    String interstitalad = "ca-app-pub-3940256099942544/1033173712";
+
 
 
     private void init(){

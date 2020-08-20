@@ -19,7 +19,6 @@
             android:id="@+id/subsciberContainer"
             >
 
-
             <FrameLayout
                 android:layout_width="140dp"
                 android:layout_height="180dp"
@@ -68,6 +67,18 @@
         android:layout_marginBottom="50dp"
         android:layout_marginRight="70dp"
         android:id="@+id/Swapcamera"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Waiting..."
+        android:textSize="20sp"
+        android:textColor="@color/whitealert"
+        android:layout_marginBottom="40dp"
+        android:id="@+id/LoadingTxt"
 
         />
 

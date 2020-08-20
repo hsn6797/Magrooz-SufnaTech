@@ -10,10 +10,13 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,6 +66,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
     private ImageButton EndCallButton;
     private ImageButton swapcamera;
     private ImageButton muteMIC;
+    private TextView Waitingforsubs;
 
 
 
@@ -79,6 +83,10 @@ public class VideoChatActivity extends AppCompatActivity  implements
     String currentUserID = "";
     String UserType = "";
     boolean mic_mute = false;
+
+    CountDownTimer Timer;
+    private long intervalmillis = 10000;
+    boolean subscribercame;
 
 
     private void init(){
@@ -111,6 +119,15 @@ public class VideoChatActivity extends AppCompatActivity  implements
         EndCallButton =(ImageButton) findViewById(R.id.EndCall);
         swapcamera =(ImageButton)findViewById(R.id.Swapcamera);
         muteMIC =(ImageButton)findViewById(R.id.micMute);
+        Waitingforsubs = (TextView)findViewById(R.id.LoadingTxt);
+
+
+
+
+        //Setting the timer for subscriber come:
+
+
+
 
 
 
@@ -180,7 +197,6 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
             }
-
 
     }
 
@@ -285,6 +301,8 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
         if(subscriber == null){
+            Waitingforsubs.setText("Connected!");
+            Waitingforsubs.setVisibility(View.INVISIBLE);
 
             subscriber = new Subscriber.Builder(this,stream).build();
             session.subscribe(subscriber);
