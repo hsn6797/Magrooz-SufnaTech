@@ -25,7 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogBox;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogInterface;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogSingleInterface;
 import com.sufnatech.magrooz.R;
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doWork(final Gender lookingForGender){
         // Loading Start
-        final Dialog dialog = AlertDialog.showLoadingDialog(LoginActivity.this);
+        final Dialog dialog = AlertDialogBox.showLoadingDialog(LoginActivity.this);
         dialog.show();
 
 
@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 // Display Some error message on screen.
-                AlertDialog.showSingleButtonAlertDialog(LoginActivity.this,"Ok","Error","Some error occur. Please try again later",new AlertDialogSingleInterface(){
+                AlertDialogBox.showSingleButtonAlertDialog(LoginActivity.this,"Ok","Error","Some error occur. Please try again later",new AlertDialogSingleInterface(){
                     @Override
                     public void doTaskOnClick() {
                     }

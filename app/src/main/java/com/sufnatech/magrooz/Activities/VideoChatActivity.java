@@ -31,7 +31,7 @@ import com.opentok.android.Connection;
 import com.opentok.android.Publisher;
 import com.opentok.android.Subscriber;
 import com.opentok.android.SubscriberKit;
-import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogBox;
 import com.sufnatech.magrooz.R;
 
 import com.opentok.android.OpentokError;
@@ -265,9 +265,6 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     @Override
     public void onConnected(Session session) {
-
-        final Dialog dialog = AlertDialog.showLoadingDialog(VideoChatActivity.this);
-
 
 
             publisher = new Publisher.Builder(this).name("publisher").build();

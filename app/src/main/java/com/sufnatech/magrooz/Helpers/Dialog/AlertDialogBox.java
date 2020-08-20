@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sufnatech.magrooz.R;
 
-public class AlertDialog extends AppCompatActivity {
+public class AlertDialogBox extends AppCompatActivity {
 
 
     public void showMultiButtonAlertDialog(Context activity, String positiveButtonText, String negativeButtonText, String title, String message, final AlertDialogInterface alertDialogInterface) {

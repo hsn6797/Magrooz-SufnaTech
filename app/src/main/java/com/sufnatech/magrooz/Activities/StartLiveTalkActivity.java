@@ -1,9 +1,11 @@
 package com.sufnatech.magrooz.Activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -41,7 +43,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.sufnatech.magrooz.Helpers.Dialog.AlertDialog;
+import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogBox;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogSingleInterface;
 import com.sufnatech.magrooz.R;
 
@@ -226,51 +228,82 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                             }
                             if(document == null){
 
-                                new LovelyStandardDialog(StartLiveTalkActivity.this, LovelyStandardDialog.ButtonLayout.VERTICAL)
-                                        .setTopColorRes(R.color.BackgroundApp)
-                                        .setButtonsColorRes(R.color.whitealert)
-                                        .setIcon(R.drawable.alert)
-                                        .setTitle("Opsss!")
-                                        .setMessage("No opposite gender found! Would you like chat with same sex?")
-                                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+                                LayoutInflater inflater = LayoutInflater.from(StartLiveTalkActivity.this);
+                                View view = inflater.inflate(R.layout.alert_dialogue,null);
+
+                                Button Accept = view.findViewById(R.id.okbtn);
+                                Button reject = view.findViewById(R.id.cancelbtn);
+
+
+                                final AlertDialog alertDialog = new AlertDialog.Builder(StartLiveTalkActivity.this)
+                                        .setView(view).create();
+                                alertDialog.setCancelable(false);
+
+                                Accept.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        alertDialog.dismiss();
+                                        db.collection("SessionMag")
+                                                .whereEqualTo("subscriberID","")
+                                                .whereEqualTo("lookingForGender",lookingForGender)//Lookingforgender
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
-                                            public void onClick(View v) {
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
+                                                if (task2.isSuccessful() && task2.getResult().size() > 0) {
+                                                    // 1- Select Random Session
+                                                    int index = new Random().nextInt(task2.getResult().getDocuments().size());
 
+                                                    DocumentSnapshot document2 = task2.getResult().getDocuments().get(index);
 
-                                                db.collection("SessionMag")
-                                                        .whereEqualTo("subscriberID","")
-                                                        .whereEqualTo("lookingForGender",lookingForGender)//Lookingforgender
-                                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                                   if (task2.isSuccessful() && task2.getResult().size() > 0) {
-        // 1- Select Random Session
-                                                         int index = new Random().nextInt(task2.getResult().getDocuments().size());
+                                                    // 2- Update the session and insert the userID in subscriberID field
+                                                    // and move to next video screen
+                                                    Map<String, Object> sessionMap = new HashMap<>();
+                                                    sessionMap.put("publisherID", document2.get("publisherID"));
+                                                    sessionMap.put("sessionID", document2.get("sessionID"));
+                                                    sessionMap.put("sessionToken", document2.get("sessionToken"));
+                                                    sessionMap.put("subscriberID", userID);
+                                                    sessionMap.put("lookingForGender", document2.get("lookingForGender"));
 
-                                                         DocumentSnapshot document2 = task2.getResult().getDocuments().get(index);
+                                                    updateSessionSubsciberID(sessionMap,document2.getId());
 
-        // 2- Update the session and insert the userID in subscriberID field
-        // and move to next video screen
-                                                       Map<String, Object> sessionMap = new HashMap<>();
-                                                        sessionMap.put("publisherID", document2.get("publisherID"));
-                                                        sessionMap.put("sessionID", document2.get("sessionID"));
-                                                        sessionMap.put("sessionToken", document2.get("sessionToken"));
-                                                        sessionMap.put("subscriberID", userID);
-                                                        sessionMap.put("lookingForGender", document2.get("lookingForGender"));
+                                                }
+                                                else{
 
-                                                        updateSessionSubsciberID(sessionMap,document2.getId());
-
-                                                   }
-                                                   else{
-
-                                                   }
-                                                    }
-                                                 });
-
+                                                }
                                             }
-                                        })
-                                        .setNegativeButton(android.R.string.no, null)
-                                        .show();
+                                        });//end of listener here....
+
+                                    }
+                                });
+
+                                reject.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+
+                                    }
+                                });
+                                alertDialog.show();
+
+//
+//                                new LovelyStandardDialog(StartLiveTalkActivity.this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
+//                                        .setTopColorRes(R.color.BackgroundApp)
+//                                        .setButtonsColorRes(R.color.whitealert)
+//                                        .setIcon(R.drawable.alert)
+//                                        .setCancelable(false)
+//                                        .setTitle("Opsss!")
+//                                        .setMessage("No opposite gender found! Would you like chat with same sex?")
+//                                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//
+//
+//
+//
+//                                            }
+//                                        })
+//                                        .setNegativeButton(android.R.string.no, null)
+//                                        .show();
 
                             }
                             else {
@@ -346,7 +379,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     private void fetchSessionforConnection(){
 
         // Loading Start
-        final Dialog dialog = AlertDialog.showLoadingDialog(StartLiveTalkActivity.this);
+        final Dialog dialog = AlertDialogBox.showLoadingDialog(StartLiveTalkActivity.this);
         dialog.show();
 
         RequestQueue reqQueue = Volley.newRequestQueue(this);
@@ -425,7 +458,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 //                dialog.dismiss();
 
                 // Display Some error message on screen.
-                AlertDialog.showSingleButtonAlertDialog(StartLiveTalkActivity.this,"Ok",
+                AlertDialogBox.showSingleButtonAlertDialog(StartLiveTalkActivity.this,"Ok",
                         "Error","Some error occur. Please try again later",
                         new AlertDialogSingleInterface(){
                             @Override
@@ -438,7 +471,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     private void updateSessionSubsciberID(final Map<String,Object> map, final String sessionID){
 
         // Loading Start
-        final Dialog dialog = AlertDialog.showLoadingDialog(StartLiveTalkActivity.this);
+        final Dialog dialog = AlertDialogBox.showLoadingDialog(StartLiveTalkActivity.this);
         dialog.show();
 
         db.collection("SessionMag")
