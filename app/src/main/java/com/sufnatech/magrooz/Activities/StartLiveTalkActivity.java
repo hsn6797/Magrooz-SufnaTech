@@ -281,6 +281,9 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                                     public void onClick(View v) {
 
 
+                                        alertDialog.dismiss();
+
+
                                     }
                                 });
                                 alertDialog.show();
