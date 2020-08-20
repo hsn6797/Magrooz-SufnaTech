@@ -9,10 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -49,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
     private Gender selectedGender;
 
 
+
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -67,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
         mAdView.loadAd(adRequest);
+
 
 
         mButton = (ImageButton) findViewById(R.id.Malebtn);
@@ -124,6 +130,8 @@ public class LoginActivity extends AppCompatActivity {
         // Loading Start
         final Dialog dialog = AlertDialog.showLoadingDialog(LoginActivity.this);
         dialog.show();
+
+
         // 1- Create User in database
         Map<String, Object> user = new HashMap<>();
         user.put("Gender", selectedGender);
@@ -133,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 // Loading finished
-                dialog.dismiss();
+               dialog.dismiss();
 
                 Log.d(TAG, "DocumentSnapshot added with ID:" + documentReference.getId());
                 final String userID = documentReference.getId();
@@ -152,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 // Loading finished
                 dialog.dismiss();
+
 
                 // Display Some error message on screen.
                 AlertDialog.showSingleButtonAlertDialog(LoginActivity.this,"Ok","Error","Some error occur. Please try again later",new AlertDialogSingleInterface(){

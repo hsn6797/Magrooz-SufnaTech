@@ -4,10 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.sufnatech.magrooz.R;
 
-public class AlertDialog {
+public class AlertDialog extends AppCompatActivity {
+
 
     public void showMultiButtonAlertDialog(Context activity, String positiveButtonText, String negativeButtonText, String title, String message, final AlertDialogInterface alertDialogInterface) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
@@ -48,6 +54,7 @@ public class AlertDialog {
     public static Dialog showLoadingDialog(Context activity) {
         // custom dialog
         final Dialog dialog = new Dialog(activity);
+
         dialog.setContentView(R.layout.loading_dialog_layout);
         return dialog;
     }

@@ -204,7 +204,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
     }
 
     @AfterPermissionGranted(RC_setting)
-    private void request_permissions()  {
+    private void request_permissions(){
 
         String[] perm = {Manifest.permission.INTERNET, Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO};
 
