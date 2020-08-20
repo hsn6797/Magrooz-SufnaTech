@@ -93,7 +93,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
         }else{
-            finish();
+           // finish();
         }
 
 
@@ -166,6 +166,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
                     mSession.unpublish(publisher);
+                    if (subscriber != null){
+                        mSession.unsubscribe(subscriber);
+                    }
 
 
 
@@ -339,13 +342,29 @@ public class VideoChatActivity extends AppCompatActivity  implements
                 });
     }
 
+    private void deleteUser(){
+        db.collection("UsersMag")
+                .document(currentUserID)
+                .delete().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // TODO - If user not deleted successfully handle it here
+            }
+        });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
+        Log.i(Log_tag, "USER: " + currentUserID );
+        Log.i(Log_tag, "TABLEUSER: " + SESSION_TABLE_ID );
+
+        deleteUser();
         deleteSessionfromDB();
 
     }
+
 
     @Override
     public void onBackPressed() {

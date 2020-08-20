@@ -311,7 +311,18 @@ public class StartLiveTalkActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        if(userID != ""){
+            deleteUser();
+
+        }
+        // Delete the created user from database where id = currentSessionID
+
+
+        if (currentSessionTableID != ""){
+            deleteSession();
+        }
     }
+
 
     @Override
     public void onBackPressed() {

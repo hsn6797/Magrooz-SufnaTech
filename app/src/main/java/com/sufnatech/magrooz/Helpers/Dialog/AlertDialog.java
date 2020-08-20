@@ -53,7 +53,8 @@ public class AlertDialog extends AppCompatActivity {
 
     public static Dialog showLoadingDialog(Context activity) {
         // custom dialog
-        final Dialog dialog = new Dialog(activity);
+        final Dialog dialog = new Dialog(activity,R.style.AppCompatAlertDialogStyle);
+
 
         dialog.setContentView(R.layout.loading_dialog_layout);
         return dialog;

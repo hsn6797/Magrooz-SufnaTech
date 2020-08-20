@@ -9,4 +9,11 @@
 
     </style>
 
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/whitealert</item>
+        <item name="android:textColorPrimary">@color/TextColor</item>
+        <item name="android:background">@color/BackgroundApp</item>
+    </style>
+
+
 </resources>
