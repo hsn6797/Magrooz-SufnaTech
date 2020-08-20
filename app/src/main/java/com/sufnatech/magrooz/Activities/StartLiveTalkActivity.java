@@ -39,9 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogBox;
 import com.sufnatech.magrooz.Helpers.Dialog.AlertDialogSingleInterface;
@@ -52,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import com.google.android.gms.ads.InterstitialAd;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+//import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 
 public class StartLiveTalkActivity extends AppCompatActivity {

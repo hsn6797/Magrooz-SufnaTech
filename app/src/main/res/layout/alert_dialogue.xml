@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     android:background="@drawable/backgroundalert"
     >
 
 
     <LinearLayout
+        android:id="@+id/firstLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="20dp"
         android:background="@color/TextColor"
         >
 
@@ -25,6 +24,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/secondLL"
+        android:layout_below="@+id/firstLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -35,55 +36,64 @@
             android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Oopss..!"
-            android:textSize="20sp"
+            android:textSize="22sp"
+            android:textStyle="bold"
             android:textColor="@color/TextColor"
             android:layout_gravity="center_horizontal"
             />
         <TextView
+            android:padding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:lineHeight="30sp"
             android:layout_gravity="center_horizontal"
             android:text="No opposite gender found! Would you like to chat with same gender?"
-            android:textSize="20dp"/>
+            android:textSize="20sp"/>
 
 
 
     </LinearLayout>
 
 
-    <RelativeLayout
-        android:layout_marginTop="10dp"
+    <LinearLayout
+        android:id="@+id/thirdLL"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/secondLL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="20dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp"
         >
 
         <Button
             android:id="@+id/cancelbtn"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="15sp"
             android:text="Cancel"
             android:textColor="@color/TextColor"
             android:background="@drawable/cancelbuttonalert"/>
 
         <Button
             android:id="@+id/okbtn"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:text="OK"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:layout_alignParentRight="true"
-
             android:background="@drawable/custom_person_button"
             />
 
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 
-</LinearLayout>
+</RelativeLayout>
