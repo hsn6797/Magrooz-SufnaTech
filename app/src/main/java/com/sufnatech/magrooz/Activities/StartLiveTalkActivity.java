@@ -286,26 +286,6 @@ public class StartLiveTalkActivity extends AppCompatActivity {
                                 });
                                 alertDialog.show();
 
-//
-//                                new LovelyStandardDialog(StartLiveTalkActivity.this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
-//                                        .setTopColorRes(R.color.BackgroundApp)
-//                                        .setButtonsColorRes(R.color.whitealert)
-//                                        .setIcon(R.drawable.alert)
-//                                        .setCancelable(false)
-//                                        .setTitle("Opsss!")
-//                                        .setMessage("No opposite gender found! Would you like chat with same sex?")
-//                                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//
-//
-//
-//
-//                                            }
-//                                        })
-//                                        .setNegativeButton(android.R.string.no, null)
-//                                        .show();
-
                             }
                             else {
 //                            DocumentSnapshot document = sessionsList.get(index);

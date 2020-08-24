@@ -37,12 +37,12 @@
     </FrameLayout>
 
     <ImageButton
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/end_call"
         android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="50dp"
         android:id="@+id/EndCall"
 
         />
@@ -50,7 +50,7 @@
     <ImageButton
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/mute"
+        android:background="@drawable/unmute"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="70dp"
         android:layout_marginBottom="50dp"
@@ -79,6 +79,30 @@
         android:textColor="@color/whitealert"
         android:layout_marginBottom="40dp"
         android:id="@+id/LoadingTxt"
+
+        />
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/nocam"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="170dp"
+        android:layout_marginRight="30dp"
+        android:id="@+id/cameraOn"
+
+        />
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/reporticon"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="250dp"
+        android:layout_marginRight="30dp"
+        android:id="@+id/Report"
 
         />
 
