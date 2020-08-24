@@ -21,11 +21,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Please select your gender to proceed"
+            android:textDirection="ltr"
+            android:text="Please select your gender"
             android:textColor="#FFF"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textAllCaps="true"
             android:layout_margin="5dp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
 
 
@@ -58,6 +60,7 @@
         android:id="@+id/midDwn_linera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_below="@+id/top_linear"
         android:gravity="center"
@@ -71,14 +74,14 @@
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:scaleType="fitCenter"
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/custom_person_onclick"
             android:src="@drawable/ic_person_male" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/femalebtn"
             android:layout_width="120dp"
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/custom_person_button"
             android:layout_margin="20dp"
             android:layout_height="50dp"
@@ -97,17 +100,17 @@
         android:layout_marginTop="70dp"
         android:orientation="vertical"
         android:gravity="center"
-
         android:layout_below="@+id/midDwn_linera"
 >
 
         <Button
             android:id="@+id/letsGObtn"
-            android:layout_width="180dp"
+            android:layout_width="220dp"
+            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:text="@string/letsgoBtn"
             android:background="@drawable/custom_button"
-            android:padding="5dp"
+            android:padding="10dp"
             android:textColor="#FFF"
             android:drawableBottom="@drawable/ic_right_arrow"
             android:textSize="18sp"
@@ -143,31 +146,31 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/versionLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/AdsBanner"
-        android:gravity="center"
-        android:orientation="vertical">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/versionLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/AdsBanner"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical">-->
 
-        <TextView
-            android:id="@+id/versionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Version"
-            android:textColor="@color/TextColor"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+<!--        <TextView-->
+<!--            android:id="@+id/versionText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Version"-->
+<!--            android:textColor="@color/TextColor"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold" />-->
 
-        <TextView
-            android:id="@+id/versionNO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0.1"
-            android:textColor="#FFF"
-            android:textSize="20sp" />
-    </LinearLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/versionNO"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="0.1"-->
+<!--            android:textColor="#FFF"-->
+<!--            android:textSize="20sp" />-->
+<!--    </LinearLayout>-->
 
 
 </RelativeLayout>

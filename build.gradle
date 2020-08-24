@@ -23,6 +23,7 @@ allprojects {
             url 'https://tokbox.bintray.com/maven'
         }
         maven { url 'https://tokbox.bintray.com/maven' }
+
     }
 }
 

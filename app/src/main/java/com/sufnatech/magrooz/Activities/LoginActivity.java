@@ -114,9 +114,13 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO: This function is only for testing fireStore connection
                 // fireStoreTest();
 
-                Gender lookingForGender =
-                        selectedGender == Gender.M ? Gender.F : Gender.M;
-                doWork(lookingForGender);
+//                Gender lookingForGender =
+//                        selectedGender == Gender.M ? Gender.F : Gender.M;
+//                doWork(lookingForGender);
+
+
+                Intent intent = new Intent(LoginActivity.this,InfoActivity.class);
+                startActivity(intent);
             }
         });
 

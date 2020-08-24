@@ -94,9 +94,8 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
 
-     Handler handler;
 
-
+    Handler handler;
 
     private void init(){
 
@@ -140,11 +139,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
 
-
-
-
         if (UserType.equals("P")){
-
 
             new CountDownTimer(20000, 1000) {
                 public void onTick(long milsecRemain){
