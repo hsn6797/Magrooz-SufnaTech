@@ -365,7 +365,7 @@ public class StartLiveTalkActivity extends AppCompatActivity {
 
         RequestQueue reqQueue = Volley.newRequestQueue(this);
         reqQueue.add(new JsonObjectRequest(Request.Method.GET,
-                "https://magroozvideoapp.herokuapp.com" + "/session",
+                "https://magroozvideochatapp.herokuapp.com" + "/session",
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

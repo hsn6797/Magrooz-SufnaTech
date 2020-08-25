@@ -10,15 +10,14 @@
     <LinearLayout
         android:id="@+id/flay"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="20dp"
         android:background="@color/TextColor">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/reporticon"
             />
 
@@ -27,10 +26,9 @@
     <LinearLayout
         android:id="@+id/Slay"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="40dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="20dp"
         android:layout_below="@+id/flay"
         >
 
@@ -44,20 +42,23 @@
 
     </LinearLayout>
 
+
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:id="@+id/Tlay"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="54dp"
         android:orientation="vertical"
-        android:gravity="center"
-        android:padding="10dp"
         android:layout_below="@+id/Slay"
         >
-        <Button
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/TextColor"
+            android:layout_height="50dp"
+            android:background="@color/BackgroundApp"
             android:text="Incorrect Gender"
+            android:textStyle="normal"
+            android:gravity="center"
+            android:textAlignment="center"
             android:textSize="22sp"
             android:textAllCaps="false"
             android:id="@+id/IG"
@@ -66,22 +67,47 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/Tlay"
+        android:orientation="vertical"
+        android:id="@+id/Tline"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/TextColor"
+
+        />
+
+    <LinearLayout
         android:id="@+id/Flay"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="125dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="10dp"
-        android:layout_below="@+id/Tlay"
+        android:layout_below="@+id/Tline"
         >
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="50dp"
+             android:textAlignment="center"
+             android:background="@color/BackgroundApp"
+             android:gravity="center"
+             android:text="In Appropriate Behaviour"
+             android:textSize="22sp"
+             android:textAllCaps="false"
+             android:id="@+id/IAB"
+        />
+
         <Button
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/TextColor"
-            android:text="In Appropriate Behaviour"
+            android:layout_height="55dp"
+            android:background="@color/whitealert"
+            android:text="Cancel"
             android:textSize="22sp"
+            android:textColor="@color/TextColor"
             android:textAllCaps="false"
-            android:id="@+id/IAB"
+            android:id="@+id/cancel"
 
             />
 

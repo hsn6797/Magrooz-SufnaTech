@@ -63,7 +63,7 @@
                 android:layout_marginRight="14dp"
                 android:scaleType="fitXY"
                 android:background="#3392d0"
-                android:src="@drawable/twitter"/>
+                android:src="@drawable/twitterm"/>
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/mB"
                 android:layout_width="40dp"

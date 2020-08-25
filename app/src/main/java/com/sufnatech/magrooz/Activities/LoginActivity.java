@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,11 +76,21 @@ public class LoginActivity extends AppCompatActivity {
         mButton = (ImageButton) findViewById(R.id.Malebtn);
         fButton = (ImageButton) findViewById(R.id.femalebtn);
         letGoButton = (Button) findViewById(R.id.letsGObtn);
+        ImageView Menu =(ImageView)findViewById(R.id.menubutton);
 
         // Default value
         selectedGender = Gender.M;
 
         // Firebase Listeners
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(LoginActivity.this,InfoActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +126,11 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO: This function is only for testing fireStore connection
                 // fireStoreTest();
 
-//                Gender lookingForGender =
-//                        selectedGender == Gender.M ? Gender.F : Gender.M;
-//                doWork(lookingForGender);
+                Gender lookingForGender =
+                        selectedGender == Gender.M ? Gender.F : Gender.M;
+                doWork(lookingForGender);
 
-
-                Intent intent = new Intent(LoginActivity.this,InfoActivity.class);
-                startActivity(intent);
+//
             }
         });
 

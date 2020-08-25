@@ -34,6 +34,27 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        >
+
+        <ImageView
+            android:layout_marginRight="10dp"
+            android:id="@+id/menubutton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menuss"
+            android:padding="5dp"
+            />
+
+
+    </RelativeLayout>
+
+
 
 
     <LinearLayout
@@ -97,7 +118,7 @@
         android:id="@+id/loginbtn_Linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="50dp"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_below="@+id/midDwn_linera"

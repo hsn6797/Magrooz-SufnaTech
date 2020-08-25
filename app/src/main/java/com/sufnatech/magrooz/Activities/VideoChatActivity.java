@@ -50,11 +50,12 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
     public static  String Log_tag = VideoChatActivity.class.getSimpleName();
 
-    public static String API_KEY = "46890114";
+    public static String API_KEY = "46895384";
 
-    public static final int RC_setting = 124;
+    public static final int RC_setting = 224;
 
     public static int delayAfterCallConnected = 120000;
+
     //public static int delayPublisherCallConnected = ;
 
 
@@ -167,6 +168,9 @@ public class VideoChatActivity extends AppCompatActivity  implements
         //Setting the timer for subscriber come:
 
 
+        // Cam on and off function here ::
+
+
         cameraOnbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,14 +193,17 @@ public class VideoChatActivity extends AppCompatActivity  implements
             }
         });
 
+        // Report Button:::
+
         reportbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = LayoutInflater.from(VideoChatActivity.this);
-                View view = inflater.inflate(R.layout.alert_dialogue,null);
+                View view = inflater.inflate(R.layout.report_layout,null);
 
-                Button Behaviour = view.findViewById(R.id.IAB);
-                Button Incorrect = view.findViewById(R.id.IG);
+                TextView Behaviour = view.findViewById(R.id.IAB);
+                TextView Incorrect = view.findViewById(R.id.IG);
+                Button cancel = view.findViewById(R.id.cancel);
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(VideoChatActivity.this)
                         .setView(view).create();
@@ -216,6 +223,12 @@ public class VideoChatActivity extends AppCompatActivity  implements
                     public void onClick(View v){
                         alertDialog.dismiss();
                         endCallFunction();
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        alertDialog.dismiss();
 
                     }
                 });
@@ -264,40 +277,34 @@ public class VideoChatActivity extends AppCompatActivity  implements
         request_permissions();
     }
 
-    // Cam on and off function here ::
 
-
-
-
+// End call function
 
     private void endCallFunction(){
 
-//
-//        subscriber.setSubscribeToVideo(false);
-//        publisher.setPublishVideo(false);
-
-
             if (publisher != null && subscriber != null){
 
-                    mSession.unpublish(publisher);
-                    mSession.unsubscribe(subscriber);
+                mSession.unpublish(publisher);
+                mSession.unsubscribe(subscriber);
 
             }
             else if (publisher != null){
 
 
-                    mSession.unpublish(publisher);
-                    if (subscriber != null){
-                        mSession.unsubscribe(subscriber);
-                    }
-
+                mSession.unpublish(publisher);
+                if(subscriber != null) {
+                    mSession.unsubscribe(subscriber);
+                }
+                finish();
 
 
             }
             else if (subscriber != null){
 
-                    mSession.unpublish(publisher);
-                    mSession.unsubscribe(subscriber);
+
+                mSession.unpublish(publisher);
+                mSession.unsubscribe(subscriber);
+
 
 
             }
@@ -356,7 +363,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
     public void onStreamDestroyed(PublisherKit publisherKit, Stream stream) {
 
         publisher = null;
-            finish();
+        finish();
 
     }
 
@@ -390,9 +397,8 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
 
     @Override
-    public void onDisconnected(Session session) {
-
-        endCallFunction();
+    public void onDisconnected(Session session){
+        finish();
     }
 
 
@@ -429,6 +435,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
             subscriber = null;
             subsciberContainer.removeAllViews();
             finish();
+
         }
 
     }
