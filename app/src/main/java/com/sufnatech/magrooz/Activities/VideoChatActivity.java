@@ -304,6 +304,7 @@ public class VideoChatActivity extends AppCompatActivity  implements
 
                 mSession.unpublish(publisher);
                 mSession.unsubscribe(subscriber);
+                finish();
 
 
 
@@ -414,16 +415,6 @@ public class VideoChatActivity extends AppCompatActivity  implements
             subscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
             subsciberContainer.addView(subscriber.getView());
 
-//            if (publisher != null && subscriber != null){
-//
-//                handler = new Handler();
-//                handler.postDelayed(new Runnable(){
-//                    public void run(){
-//                        endCallFunction();
-//                        handler.postDelayed(this, delayAfterCallConnected);//now is every 2.3 minutes
-//                    }
-//                },delayAfterCallConnected);
-//            }
         }
     }
 
